@@ -37,11 +37,19 @@ trait Primitives extends Protocol {
   }
 
   implicit object DoubleFormat extends Format[Double] {
-    def writes(o: Double) = JsValue.apply(o)
-    def reads(json: JsValue) = json match {
-      case JsNumber(n) => n.doubleValue
-      case _ => throw new RuntimeException("Double expected")
+    def writes(o: Double) = try {
+      JsValue.apply(o)
     }
+    catch {
+      // we need Infinity/NaN goodness
+      case e: NumberFormatException => JsValue.apply(o.toString)
+    }
+
+    def reads(json: JsValue) = json match {
+        case JsString(n) => n.toDouble
+        case JsNumber(n) => n.doubleValue
+        case _           => throw new RuntimeException("Double (or string) expected")
+      }
   }
 
   implicit object BooleanFormat extends Format[Boolean] {
