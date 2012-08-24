@@ -21,6 +21,7 @@ trait Protocol {
   implicit val FloatFormat: Format[Float]
   implicit val DoubleFormat: Format[Double]
   implicit val StringFormat: Format[String]
+  implicit val CharFormat: Format[Char]
 }
 
 trait DefaultProtocol extends CollectionTypes with Generic with Primitives

@@ -36,7 +36,7 @@ trait Primitives extends Protocol {
     }
   }
 
-  implicit val chrFormat: Format[Char] = new Format[Char] {
+  implicit object CharFormat extends Format[Char] {
     def writes(o: Char) = JsValue.apply(o.toInt)
     def reads(json: JsValue) = json match {
       case JsNumber(n) => n.intValue().toChar
