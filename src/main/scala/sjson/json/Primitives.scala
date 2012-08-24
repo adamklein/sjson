@@ -36,6 +36,14 @@ trait Primitives extends Protocol {
     }
   }
 
+  implicit val chrFormat: Format[Char] = new Format[Char] {
+    def writes(o: Char) = JsValue.apply(o.toInt)
+    def reads(json: JsValue) = json match {
+      case JsNumber(n) => n.intValue().toChar
+      case _           => throw new RuntimeException("Char expected")
+    }
+  }
+
   implicit object DoubleFormat extends Format[Double] {
     def writes(o: Double) = try {
       JsValue.apply(o)
